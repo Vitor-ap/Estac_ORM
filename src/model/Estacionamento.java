@@ -51,6 +51,9 @@ public class Estacionamento {
 	
 	@Column(name = "pagamento", length = 10)
 	private String pagamento;
+	
+	@Column(name = "valor")
+	private double valor;
 
 	
 	public String getOs() {
@@ -131,6 +134,14 @@ public class Estacionamento {
 
 	public void setPagamento(String pagamento) {
 		this.pagamento = pagamento;
+	}
+
+	public double getValor() {
+		return valor;
+	}
+
+	public void setValor(double valor) {
+		this.valor = valor;
 	}
 	
 }

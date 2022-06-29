@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 
 import org.hibernate.SessionFactory;
 
+import boundary.DeleteBoundary;
 import boundary.Estilos;
 import boundary.SaidaBoundary;
 import javafx.beans.property.ObjectProperty;
@@ -30,6 +31,7 @@ import util.HibernateUtil;
 public class EstacionamentoController {
 	Estilos estilos = new Estilos();
 	SaidaBoundary saida = new SaidaBoundary();
+	DeleteBoundary del = new DeleteBoundary();
 	private SessionFactory sf = HibernateUtil.getSessionFactory();
 	private IEstacionamentoPersistence<Estacionamento> dao = new EstacionamentoPersistence(sf);
 	private TableView<Estacionamento>table = new TableView<>();
@@ -106,13 +108,13 @@ public class EstacionamentoController {
 		
 		table.getColumns().addAll(col1,col2,col3,col4,col5,col6,col7);
 		
-		col1.setPrefWidth(130);
-		col2.setPrefWidth(130);
-		col3.setPrefWidth(250);
-		col4.setPrefWidth(130);
-		col5.setPrefWidth(130);
-		col6.setPrefWidth(130);
-		col7.setPrefWidth(160);
+		col1.setPrefWidth(150);
+		col2.setPrefWidth(150);
+		col3.setPrefWidth(400);
+		col4.setPrefWidth(200);
+		col5.setPrefWidth(200);
+		col6.setPrefWidth(200);
+		col7.setPrefWidth(200);
 	
 		table.setStyle(estilos.GetEstiloSub());
 		table.setItems(estacionamento);
@@ -127,7 +129,7 @@ public class EstacionamentoController {
 	public void adicionar() throws SQLException {
 		Estacionamento e = new Estacionamento();
 		if ( os.get() == "" || placa.get() =="" || modelo.get() == "" || 
-				data.get() == null ) {
+				data.get() == null || cor.get() =="" || hrEntrada.get() == "" || minEntrada.get()=="") {
 			JOptionPane.showMessageDialog(null, "ERRO! VERIFIQUE SE TODOS OS CAMPOS ESTÃO PREENCHIDOS");
 		} else {
 		e.setOs(os.get());
@@ -161,7 +163,7 @@ public class EstacionamentoController {
 	  placa.set("");
 	    modelo.set("");
 	    cor.set("");
-	    data.set(LocalDate.now());
+	    data.set(null);
 	    hrEntrada.set("");
 	    minEntrada.set("");
 	    os.set("");
@@ -177,6 +179,15 @@ public class EstacionamentoController {
 	
 	public TableView<Estacionamento> getTable() {
 		return table;
+	}
+
+
+	public void acessaDelete() {
+		try {
+			del.start(new Stage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 

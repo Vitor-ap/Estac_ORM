@@ -3,6 +3,8 @@ package boundary;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
+import javax.swing.JOptionPane;
+
 import controller.EstacionamentoController;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -51,6 +53,7 @@ public class EstacionamentoBoundary extends Application {
 	Button btnRgs = new Button ("Saída");
 	Button btnPesqPlaca = new Button("Consultar");
 	Button btnVoltar = new Button("Fechar");
+	Button btnDelete = new Button("Deletar");
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -59,7 +62,6 @@ public class EstacionamentoBoundary extends Application {
 		
 		GridPane formularioEstac = new GridPane();
 		GridPane formularioEntrada = new GridPane();
-		//GridPane formularioSaida = new GridPane();
 		BorderPane painelPrincipal = new BorderPane();
 
 		Bindings.bindBidirectional(control.osProperty(), txtOs.textProperty());
@@ -74,17 +76,10 @@ public class EstacionamentoBoundary extends Application {
 		formularioEntrada.add(txtHoraEntrada, 0, 0);
 		formularioEntrada.add(txtMinutoEntrada, 2, 0);
 		formularioEntrada.add(new Label(" : "), 1, 0);
-		txtHoraEntrada.setPrefSize(80, 60);
-		txtMinutoEntrada.setPrefSize(80, 60);
+		txtHoraEntrada.setPrefSize(80, 40);
+		txtMinutoEntrada.setPrefSize(80,40);
 		
 		
-//		formularioSaida.add(txtHoraSaida, 0, 0);
-//		formularioSaida.add(txtMinutoSaida, 2, 0);
-//		formularioSaida.add(new Label(" : "), 1, 0);
-//		txtHoraSaida.setPrefSize(80, 60);
-//		txtMinutoSaida.setPrefSize(80, 60);
-
-
 
 		formularioEstac.setStyle(estilos.GetEstiloSub());
 		formularioEstac.setHgap(50);
@@ -117,8 +112,11 @@ public class EstacionamentoBoundary extends Application {
 		formularioEstac.add(btnPesqPlaca, 4, 2);
 		btnPesqPlaca.setStyle(estilos.getEstiloBotao1());
 		
-		formularioEstac.add(btnVoltar, 5, 0);
+		formularioEstac.add(btnVoltar, 5, 2);
 		btnVoltar.setStyle(estilos.getEstiloBotao1());
+		
+		formularioEstac.add(btnDelete, 5, 0);
+		btnDelete.setStyle(estilos.getEstiloBotao1());
 		
 
 		painelPrincipal.setTop(formularioEstac);
@@ -130,6 +128,7 @@ public class EstacionamentoBoundary extends Application {
 				control.adicionar();
 			} catch (SQLException e1) {
 				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null, "ERRO! NÃO FOI POSSIVEL ADICIONAR");
 			}
 		});
 		
@@ -145,6 +144,9 @@ public class EstacionamentoBoundary extends Application {
 			getStage().close();
 		});
 		
+		btnDelete.setOnAction(e->{
+			control.acessaDelete();
+		});
 		
 		
 		Scene scn = new Scene(painelPrincipal, 1400, 800);

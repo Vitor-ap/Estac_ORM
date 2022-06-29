@@ -1,8 +1,10 @@
 package controller;
 
 import java.sql.SQLException;
-
+import java.awt.Font;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
 
 import org.hibernate.SessionFactory;
 
@@ -14,8 +16,10 @@ import persistence.EstacionamentoPersistence;
 import persistence.IEstacionamentoPersistence;
 import util.HibernateUtil;
 
-public class SaidaController {
 
+
+public class SaidaController {
+	
 	
 	private SessionFactory sf = HibernateUtil.getSessionFactory();
 	private IEstacionamentoPersistence<Estacionamento> dao = new EstacionamentoPersistence(sf);
@@ -32,7 +36,7 @@ public class SaidaController {
 	private StringProperty hrSaida = new SimpleStringProperty();
 	private StringProperty minSaida = new SimpleStringProperty();
 	private StringProperty pagamento = new SimpleStringProperty();
-	private double valor;
+
 	
 	public StringProperty osProperty() {
 		return os;
@@ -69,34 +73,34 @@ public class SaidaController {
 	public StringProperty pagamentoProperty() {
 		return pagamento;
 	}
-	
-	public double valorProperty() {
-		return valor;
-	}
-	
+
+
 
 	public void pesquisar() throws SQLException {
 		Estacionamento e = new Estacionamento();
-		Estacionamento e2 = new Estacionamento();
 			e.setOs(os.get());
-			e2 = dao.selectOne(e);
-			placa.set(e2.getPlaca());
-			modelo.set(e2.getModelo());
-			cor.set(e2.getCor());
-			data.set(String.valueOf(e2.getData()));
-			hrEntrada.set(e2.getHrEntrada());
-			minEntrada.set(e2.getMinEntrada());
-			resultEstac = e2;
+			resultEstac = dao.selectOne(e);
+			if (resultEstac == null ) {
+				JOptionPane.showMessageDialog(null, "ERRO! NÃO FOI ENCONTRADO REGISTRO");
+				
+			}else {
+			placa.set(resultEstac.getPlaca());
+			modelo.set(resultEstac.getModelo());
+			cor.set(resultEstac.getCor());
+			data.set(String.valueOf(resultEstac.getData()));
+			hrEntrada.set(resultEstac.getHrEntrada());
+			minEntrada.set(resultEstac.getMinEntrada());
+			}
 	}
 		
-		public void atualizar() throws SQLException {
+		public void registraSaida() throws SQLException {
 			TempoEPreco tmp = new TempoEPreco();
 			int confirm = JOptionPane.showConfirmDialog(null, "Confirma o Registro?");
 			if (confirm == JOptionPane.YES_OPTION) {
 			resultEstac.setHrSaida(hrSaida.get());
 			resultEstac.setMinSaida(minSaida.get());
 			resultEstac.setPagamento(pagamento.get());
-			dao.update(resultEstac);
+
 			int he = Integer.parseInt(hrEntrada.get());
 			int me = Integer.parseInt(minEntrada.get());
 			int hs = Integer.parseInt(hrSaida.get());
@@ -119,8 +123,12 @@ public class SaidaController {
 			
 			ValorMeiaHora valorM = new ValorMeiaHora();
 			valorM.proximaCondicao(tmp);
+			UIManager.put("OptionPane.messageFont", new FontUIResource(new Font("Times New Roman", Font.BOLD, 24)));
+			JOptionPane.showMessageDialog(null, "\n\nVALOR A SER PAGO: \n\n\n\n" + tmp.getValor() + " REAIS.\n\n ");
+			recebeValor(tmp.getValor());
 			
-			JOptionPane.showMessageDialog(null, "valor a ser Pago  " + tmp.getValor());
+			resultEstac.setValor(tmp.getValor());
+			dao.update(resultEstac);
 			limpaSaida();
 			}
 		}
@@ -145,5 +153,21 @@ public class SaidaController {
 		public void calcTempoPermanencia() {
 		}
 		
+		
+		public void recebeValor(double valor) {
+			IPagamentoStrategy pg;
+			
+			if (pagamento.get().equals("Dinheiro")) {
+				pg = new PagamentoDinheiro();
+				pg.recebePagamento(valor);
+			}
+			if (pagamento.get().equals("Pix")) {
+				pg = new PagamentoPix();
+				pg.recebePagamento(valor);
+			} if (pagamento.get().equals("Cartão")){
+				pg = new PagamentoCartão();
+				pg.recebePagamento(valor);
+			}
+		}
 	}
 

@@ -4,13 +4,11 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
-import controller.SaidaController;
+import controller.DeleteController;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
@@ -19,10 +17,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class SaidaBoundary extends Application{
+public class DeleteBoundary extends Application{
 	private Stage stage;
-	private String imagem = 		"fundopreto2.jpg";
-	SaidaController control = new SaidaController();
+	private String imagem = 		"waptrash.jpg";
+	DeleteController control = new DeleteController();
 	
 	Estilos estilos = new Estilos();
 	
@@ -33,12 +31,8 @@ public class SaidaBoundary extends Application{
 	private Text data = new Text();
 	private Text hrEntrada = new Text();
 	private Text minEntrada = new Text();
-	TextField hrSaida = new TextField();
-	TextField minSaida = new TextField();
 	
-	ComboBox<String> comboPag = new ComboBox<String>(FXCollections.observableArrayList("Dinheiro", "Pix", "Cartão"));
-	
-	Button btnSaida = new Button("Registrar");
+	Button btnApagar = new Button("Deletar");
 	Button btnPesq = new Button("Consultar");
 	Button btnFechar = new Button ("Fechar");
 	Button btnLimpar = new Button("Limpar");
@@ -49,8 +43,6 @@ public class SaidaBoundary extends Application{
 	Label lblCor = new Label("Cor");
 	Label lblData = new Label("Data");
 	Label lblEntrada = new Label("Entrada");
-	Label lblSaida = new Label("Saida");
-	Label lblPgto = new Label("Forma de pagamento");
 	
 	
 	@Override
@@ -62,26 +54,17 @@ public class SaidaBoundary extends Application{
 		Bindings.bindBidirectional(control.dataProperty(), data.textProperty());
 		Bindings.bindBidirectional(control.hrEntradaProperty(), hrEntrada.textProperty());
 		Bindings.bindBidirectional(control.minEntradaProperty(),minEntrada.textProperty());
-		Bindings.bindBidirectional(control.hrSaidaProperty(), hrSaida.textProperty());
-		Bindings.bindBidirectional(control.minSaidaProperty(),minSaida.textProperty());
-		Bindings.bindBidirectional(comboPag.valueProperty(),control.pagamentoProperty());
+		
 		
 		Background bkg = estilos.setarPlanoDeFundo(imagem);
 		GridPane panegd = new GridPane();
 		GridPane paneEntrada = new GridPane();
-		GridPane paneSaida = new GridPane();
 		
 		
 		paneEntrada.add(hrEntrada, 0, 0);
 		paneEntrada.add(new Label(":"), 1, 0);
 		paneEntrada.add(minEntrada, 2, 0);
 		
-		
-		paneSaida.add(hrSaida, 0, 0);
-		paneSaida.add(new Label(":"), 1, 0);
-		paneSaida.add(minSaida, 2, 0);
-		hrSaida.setPrefSize(50, 50);
-		minSaida.setPrefSize(50, 50);
 		
 		panegd.setStyle(estilos.GetEstiloSub());
 		panegd.setBackground(bkg);
@@ -91,7 +74,9 @@ public class SaidaBoundary extends Application{
 		panegd.add(lblOs, 0, 0);
 		panegd.add(os, 1, 0);
 		panegd.add(btnPesq, 2, 0);
+		panegd.add(btnApagar, 3, 0);
 		btnPesq.setStyle(estilos.getEstiloBotao1());
+		btnApagar.setStyle(estilos.getEstiloBotao1());
 		
 		panegd.add(lblPlaca,0,1);
 		panegd.add(placa, 1, 1);
@@ -108,16 +93,6 @@ public class SaidaBoundary extends Application{
 		panegd.add(lblEntrada, 0, 5);
 		panegd.add(paneEntrada, 1, 5);
 		
-		panegd.add(lblSaida, 0, 6);
-		panegd.add(paneSaida, 1, 6);
-		
-		panegd.add(lblPgto, 0, 7);
-		panegd.add(comboPag, 1, 7);
-		panegd.add(btnSaida, 2, 7);
-		btnSaida.setStyle(estilos.getEstiloBotao1());
-		comboPag.setPrefSize(250, 40);
-		
-		
 		panegd.add(btnFechar, 0, 9);
 		btnFechar.setStyle(estilos.getEstiloBotao1());
 
@@ -130,18 +105,18 @@ public class SaidaBoundary extends Application{
 				control.pesquisar();
 			} catch (SQLException e1) {
 				e1.printStackTrace();
-
+				JOptionPane.showMessageDialog(null, "ERRO! NÃO FOI POSSIVEL LOCALIZAR");
 			}
 		});
 		
 		
-		btnSaida.setOnAction(e->{
+		btnApagar.setOnAction(e->{
 			try {
-				control.registraSaida();
+				control.deletar();
 				stage.close();
 			} catch (SQLException e1) {
 				e1.printStackTrace();
-				JOptionPane.showMessageDialog(null, "ERRO! NÃO FOI POSSIVEL REGISTRAR");
+				JOptionPane.showMessageDialog(null, "ERRO! NÃO FOI POSSIVEL DELETAR");
 			}
 		});
 		
@@ -151,11 +126,11 @@ public class SaidaBoundary extends Application{
 		});
 		
 		btnLimpar.setOnAction(e->{
-			control.limpaSaida();
+			control.limpa();
 		});
 
 		
-		Scene sc = new Scene(panegd, 1200,800 );
+		Scene sc = new Scene(panegd, 800,800 );
 		stage.initStyle(StageStyle.UNDECORATED);
 		stage.setAlwaysOnTop(false);
 		stage.setScene(sc);
@@ -214,3 +189,4 @@ public class SaidaBoundary extends Application{
 	}
 
 }
+
