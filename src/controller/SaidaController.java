@@ -133,9 +133,6 @@ public class SaidaController {
 			}
 		}
 		
-		public void calculaValor() {
-			
-		}
 		
 		public void limpaSaida() {
 			os.set("");
@@ -148,9 +145,6 @@ public class SaidaController {
 			minSaida.set("");
 			pagamento.set("");
 			data.set("");
-		}
-		
-		public void calcTempoPermanencia() {
 		}
 		
 		

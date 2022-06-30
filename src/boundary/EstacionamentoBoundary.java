@@ -34,7 +34,6 @@ public class EstacionamentoBoundary extends Application {
 	Label lblCor = new Label("Cor");
 	Label lbldata = new Label("Data");
 	Label lblHoraE = new Label("Entrada");
-	Label lblHoraS = new Label("Saida");
 
 	TextField txtOs= new TextField();
 	TextField txtPlaca = new TextField();
@@ -42,8 +41,6 @@ public class EstacionamentoBoundary extends Application {
 	TextField txtCor = new TextField();
 	TextField txtHoraEntrada = new TextField();
 	TextField txtMinutoEntrada = new TextField();
-	TextField txtHoraSaida = new TextField();
-	TextField txtMinutoSaida = new TextField();
 
 
 	DatePicker txtData = new DatePicker(LocalDate.now());
